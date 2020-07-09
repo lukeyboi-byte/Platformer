@@ -1,21 +1,21 @@
 ﻿  Source.cpp
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\Platformer\Editor.h(66,25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\Platformer\Editor.h(66,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\Platformer\Editor.h(144,25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\Platformer\Editor.h(144,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\Platformer\Source.cpp(18,65): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
+C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(66,25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(66,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(144,25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(144,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Source.cpp(18,65): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\Platformer\Source.cpp(20,60): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
+C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Source.cpp(20,60): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\Platformer\Source.cpp(20,47): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
+C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Source.cpp(20,47): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-  Platformer.vcxproj -> C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\Debug\Platformer.exe
+  Platformer.vcxproj -> C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Debug\Platformer.exe
