@@ -143,7 +143,7 @@ public:
 		loadTextures();
 		sprite.setPosition(x, y);
 		RefreshTile();
-		actor.init(x, y);
+		actor.Init(x, y);
 	}
 
 	void ChangeTile(Type t)
