@@ -174,6 +174,12 @@ public:
 			break;
 		}
 	}
+
+	bool mouseOver(sf::Vector2f windPos)
+	{
+		sf::FloatRect rBounds = sprite.getGlobalBounds();
+		return rBounds.contains(windPos.x, windPos.y);
+	}
 };
 
 class Button : public sf::Drawable, public sf::Transformable 
@@ -219,7 +225,7 @@ public:
 		}
 	}
 	//check for click, if so, pass a function as an argument to store
-	void checkClick(std::function<void()> f, sf::Vector2f windpos)
+	void CheckClick(std::function<void()> f, sf::Vector2f windpos)
 	{
 		if (mouseOver(windpos) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
@@ -261,6 +267,7 @@ public:
 class EditorClass 
 {
 public:
+	EditorClass();
 	// grid amounts
 	static const int x = 30;
 	static const int y = 20;
@@ -283,14 +290,269 @@ public:
 	//setup tiles to select and paint with
 	Tile tileButton[9];
 	//setup tiles array
-	Tile tile[x][y];
+	//Tile tile[x][y];
+	Tile** tile = new Tile* [x];
 
 	bool Start();
 	int Update();
 
 	//saving
+	void save(Tile** incTile)
+	{
+		//write text to a file
+		std::ofstream myfile("save.sav");
+		std::list<sf::Vector2i> coinPos;
+		std::list<sf::Vector2i> enemyPos;
+		std::list<sf::Vector2i> spikePos;
+		sf::Vector2i playerPos;
+		sf::Vector2i exitPos;
+
+		if (myfile.is_open())
+		{
+			std::cout << "saving Tiles \n";
+			for (int i = 0; i < x; i++)
+			{
+				for (int j = 0; j < y; j++)
+				{
+					switch (incTile[i][j].type)
+					{
+						//sky = 0, platform = 1, lava = 2
+					case Tile::Type::Sky:
+						myfile << "0";
+						break;
+					case Tile::Type::Platform:
+						myfile << "1";
+						break;
+					case Tile::Type::Lava:
+						myfile << "2";
+						break;
+					}
+					myfile << ",";
+					switch (incTile[i][j].actor.type)
+					{
+					case Actor::Type::Coin:
+						coinPos.push_back(sf::Vector2i(i, j));
+						break;
+					case Actor::Type::Enemy:
+						enemyPos.push_back(sf::Vector2i(i, j));
+						break;
+					case Actor::Type::Spike:
+						spikePos.push_back(sf::Vector2i(i, j));
+						break;
+					case Actor::Type::Player:
+						playerPos = sf::Vector2i(i, j);
+						break;
+					case Actor::Type::Exit:
+						exitPos = sf::Vector2i(i, j);
+						break;
+					}
+				}
+				myfile << "\n";
+			}
+			//loop through all of the lists, add them to the save file, then add the player/exit positions
+			//cIt = coin iterator
+			//coins
+			if (!coinPos.empty())
+			{
+				std::cout << "Saving coins! \n";
+				myfile << "Coin";
+				std::list<sf::Vector2i>::iterator cIt;
+				for (cIt = coinPos.begin(); cIt != coinPos.end(); cIt++)
+				{
+					sf::Vector2i curCoinPos = sf::Vector2i(cIt->x, cIt->y);
+					std::cout << "Saving coin at: " << curCoinPos.x << "," << curCoinPos.y << "\n";
+					myfile << '(' << curCoinPos.x << ',' << curCoinPos.y << ')';
+				}
+				myfile << "\n";
+			}
+			//enemies
+			if (!enemyPos.empty())
+			{
+				std::cout << "Saving enemies! \n";
+				myfile << "Enemy";
+				std::list<sf::Vector2i>::iterator eIt;
+				for (eIt = enemyPos.begin(); eIt != enemyPos.end(); eIt++)
+				{
+					sf::Vector2i curEnemyPos = sf::Vector2i(eIt->x, eIt->y);
+					std::cout << "Saving enemy at: " << curEnemyPos.x << "," << curEnemyPos.y << "\n";
+					myfile << '(' << curEnemyPos.x << ',' << curEnemyPos.y << ')';
+				}
+				myfile << "\n";
+			}
+			//spikes
+			if (!spikePos.empty())
+			{
+				std::cout << "Saving spikes! \n";
+				myfile << "Spike";
+				std::list<sf::Vector2i>::iterator sIt;
+				for (sIt = spikePos.begin(); sIt != spikePos.end(); sIt++)
+				{
+					sf::Vector2i curSpikePos = sf::Vector2i(sIt->x, sIt->y);
+					std::cout << "Saving spike at: " << curSpikePos.x << "," << curSpikePos.y << "\n";
+					myfile << '(' << curSpikePos.x << ',' << curSpikePos.y << ')';
+				}
+				myfile << "\n";
+			}
+			//player
+			std::cout << "Saving player at: " << playerPos.x << ',' << playerPos.y << "\n";
+			myfile << "Player" << '(' << playerPos.x << ',' << playerPos.y << ')' << "\n";
+			//exit
+			std::cout << "Saving exit at: " << exitPos.x << ',' << exitPos.y << "\n";
+			myfile << "Exit" << '(' << exitPos.x << ',' << exitPos.y << ')' << "\n";
+
+			//all done, close file
+			myfile.close();
+			std::cout << "Saving complete! \n";
+		}
+		else
+		{
+			std::cout << "Can't open save file! \n";
+		}
+	}
 
 	//loading
+	void load(Tile** incTile)
+	{
+		std::string line;
+		std::ifstream myfile("save.sav");
+		if (myfile.is_open())
+		{
+			int a = 0;
+			int b = 0;
+			std::string saveHold;
+			while (std::getline(myfile, line))
+			{
+				if (b == 0)
+				{
+					std::cout << "Loading Tiles \n";
+				}
+				if (b < x)
+				{
+					for (int i = 0; i < line.size(); i++)
+					{
+						switch (line[i])
+						{
+						case ',':
+							a++;
+							break;
+						case '0':
+							incTile[b][a].ChangeTile(Tile::Type::Sky);
+							break;
+						case '1':
+							incTile[b][a].ChangeTile(Tile::Type::Platform);
+							break;
+						case '2':
+							incTile[b][a].ChangeTile(Tile::Type::Lava);
+							break;
+						}
+						incTile[b][a].RefreshTile();
+					}
+				}
+				else if (b >= x) // loading actors
+				{
+					//Check the first two characters on the lines after tiles are loaded
+					//[C][o]ions, [S][p]ikes, [E][n]emies
+					std::string lineHold = line;
+					int curStart;
+					int curEnd = 0;
+					std::string posString;
+					if (line[0] == 'C' && line[1] == 'o') // [C][o]ions
+					{
+						std::cout << "loading coins! \n";
+						while (curEnd < lineHold.length() && lineHold.find('(') != std::string::npos) //if the ')' isn't the last in the line
+						{
+							curStart = lineHold.find('('); //find the fisrt bracket of one of the first positions
+							curEnd = lineHold.find(')'); // then find the closing bracket that's next in line
+							posString = lineHold.substr(curStart + 1, curEnd - (curStart + 1)); //cut just the numbers out
+							std::cout << "Loaded Coin at: " << posString << "\n"; //we now have something like "5,15"
+							std::string xStr = posString.substr(0, posString.find(','));
+							std::string yStr = posString.substr(posString.find(',') + 1, posString.length());
+
+							incTile[std::stoi(xStr)][std::stoi(yStr)].ChangeActor(Actor::Type::Coin);
+							lineHold[curStart] = '<';
+							lineHold[curEnd] = '>';
+						}
+					}
+					else if (line[0] == 'E' && line[1] == 'n') //[E][n]emies
+					{
+						std::cout << "loading enemies! \n";
+						while (curEnd < lineHold.length() && lineHold.find('(') != std::string::npos) //if the ')' isn't the last in the line
+						{
+							curStart = lineHold.find('('); //find the fisrt bracket of one of the first positions
+							curEnd = lineHold.find(')'); // then find the closing bracket that's next in line
+							posString = lineHold.substr(curStart + 1, curEnd - (curStart + 1)); //cut just the numbers out
+							std::cout << "Loaded Enemy at: " << posString << "\n"; //we now have something like "5,15"
+							std::string xStr = posString.substr(0, posString.find(','));
+							std::string yStr = posString.substr(posString.find(',') + 1, posString.length());
+
+							incTile[std::stoi(xStr)][std::stoi(yStr)].ChangeActor(Actor::Type::Enemy);
+							lineHold[curStart] = '<';
+							lineHold[curEnd] = '>';
+						}
+					}
+					else if (line[0] == 'S' && line[1] == 'p') //[S][p]ikes
+					{
+						std::cout << "loading spikes! \n";
+						while (curEnd < lineHold.length() && lineHold.find('(') != std::string::npos) //if the ')' isn't the last in the line
+						{
+							curStart = lineHold.find('('); //find the fisrt bracket of one of the first positions
+							curEnd = lineHold.find(')'); // then find the closing bracket that's next in line
+							posString = lineHold.substr(curStart + 1, curEnd - (curStart + 1)); //cut just the numbers out
+							std::cout << "Loaded Spike at: " << posString << "\n"; //we now have something like "5,15"
+							std::string xStr = posString.substr(0, posString.find(','));
+							std::string yStr = posString.substr(posString.find(',') + 1, posString.length());
+
+							incTile[std::stoi(xStr)][std::stoi(yStr)].ChangeActor(Actor::Type::Spike);
+							lineHold[curStart] = '<';
+							lineHold[curEnd] = '>';
+						}
+					}
+					else if (line[0] == 'P' && line[1] == 'l') //[P][l]ayer
+					{
+						std::cout << "loading player! \n";
+						while (curEnd < lineHold.length() && lineHold.find('(') != std::string::npos) //if the ')' isn't the last in the line
+						{
+							curStart = lineHold.find('('); //find the fisrt bracket of one of the first positions
+							curEnd = lineHold.find(')'); // then find the closing bracket that's next in line
+							posString = lineHold.substr(curStart + 1, curEnd - (curStart + 1)); //cut just the numbers out
+							std::cout << "Loaded Player at: " << posString << "\n"; //we now have something like "5,15"
+							std::string xStr = posString.substr(0, posString.find(','));
+							std::string yStr = posString.substr(posString.find(',') + 1, posString.length());
+
+							incTile[std::stoi(xStr)][std::stoi(yStr)].ChangeActor(Actor::Type::Player);
+							lineHold[curStart] = '<';
+							lineHold[curEnd] = '>';
+						}
+					}
+					else if (line[0] == 'E' && line[1] == 'x') //[E][x]it
+					{
+						std::cout << "loading exit! \n";
+						while (curEnd < lineHold.length() && lineHold.find('(') != std::string::npos) //if the ')' isn't the last in the line
+						{
+							curStart = lineHold.find('('); //find the fisrt bracket of one of the first positions
+							curEnd = lineHold.find(')'); // then find the closing bracket that's next in line
+							posString = lineHold.substr(curStart + 1, curEnd - (curStart + 1)); //cut just the numbers out
+							std::cout << "Loaded Exit at: " << posString << "\n"; //we now have something like "5,15"
+							std::string xStr = posString.substr(0, posString.find(','));
+							std::string yStr = posString.substr(posString.find(',') + 1, posString.length());
+
+							incTile[std::stoi(xStr)][std::stoi(yStr)].ChangeActor(Actor::Type::Exit);
+							lineHold[curStart] = '<';
+							lineHold[curEnd] = '>';
+						}
+					}
+				}
+				b += 1;
+				a = 0;
+			}
+			myfile.close();
+			std::cout << "File loaded! \n";
+		}
+		else
+		{
+			std::cout << "Cannot open save file to load! \n";
+		}
+	}
 
 	//printing out tiles (debug)
 	

@@ -3,17 +3,23 @@ C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor
 C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(66,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(144,25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(144,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Source.cpp(18,65): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
+C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(431,24): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(462,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(479,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(496,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(513,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(530,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Source.cpp(26,65): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Source.cpp(20,60): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
+C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Source.cpp(28,60): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Source.cpp(20,47): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
+C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Source.cpp(28,47): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
           with
           [
               T=float
