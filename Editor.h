@@ -4,6 +4,7 @@
 #include <fstream>
 #include <list>
 #include <functional>
+#include "WindowHeader.h"
 
 class Actor : public sf::Drawable, public sf::Transformable
 {
@@ -234,6 +235,36 @@ public:
 	}
 };
 
+class InputField : public sf::Drawable, public sf::Transformable
+{
+private:
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
+	{
+		target.draw(rect, states);
+		target.draw(text, states);
+	}
+public:
+	sf::RectangleShape rect;
+	sf::Text text;
+	sf::Font font;
+	int fontSize = 16;
+	InputField()
+	{
+		font.loadFromFile("arial.ttf");
+		text.setFont(font);
+		text.setCharacterSize(fontSize);
+		text.setFillColor(sf::Color::Black);
+		text.setStyle(sf::Text::Regular);
+	}
+
+	void UpdatePos(sf::Vector2f newPos)
+	{
+		rect.setSize(sf::Vector2f(text.getGlobalBounds().width + 6, text.getGlobalBounds().height + 6));
+		rect.setPosition(newPos);
+		text.setPosition(rect.getPosition().x + (rect.getSize().x / 400000), rect.getPosition().y);
+	}
+};
+
 class ToolPanel : public sf::Drawable, public sf::Transformable
 {
 private:
@@ -281,7 +312,7 @@ public:
 	sf::Vector2f worldPos;
 	sf::View toolsView;
 	sf::View levelEditView;
-	sf::RenderWindow window;
+
 	//setup variable to track selected brush
 	Tile::Type curTileType;
 	Actor::Type curActorType;
@@ -293,14 +324,19 @@ public:
 	//Tile tile[x][y];
 	Tile** tile = new Tile* [x];
 
-	bool Start();
-	int Update();
+	bool Start(MainRenderWindow &mainWindow);
+	void Update(MainRenderWindow &mainWindow);
+
+	bool editorActive = false;
+
+	std::string playerInput;
+	InputField inputField;
 
 	//saving
-	void save(Tile** incTile)
+	void save(std::string fileName, Tile** incTile)
 	{
 		//write text to a file
-		std::ofstream myfile("save.sav");
+		std::ofstream myfile(fileName + ".sav");
 		std::list<sf::Vector2i> coinPos;
 		std::list<sf::Vector2i> enemyPos;
 		std::list<sf::Vector2i> spikePos;
@@ -411,10 +447,10 @@ public:
 	}
 
 	//loading
-	void load(Tile** incTile)
+	void load(std::string fileName, Tile** incTile)
 	{
 		std::string line;
-		std::ifstream myfile("save.sav");
+		std::ifstream myfile(fileName +".sav");
 		if (myfile.is_open())
 		{
 			int a = 0;
@@ -446,6 +482,7 @@ public:
 							break;
 						}
 						incTile[b][a].RefreshTile();
+						incTile[b][a].ChangeActor(Actor::Type::None);
 					}
 				}
 				else if (b >= x) // loading actors
