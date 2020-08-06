@@ -14,33 +14,15 @@ C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Game.c
 C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Game.cpp(94,20): warning C4018: '<': signed/unsigned mismatch
 C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Game.cpp(111,20): warning C4018: '<': signed/unsigned mismatch
 C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Game.cpp(128,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Game.cpp(145,20): warning C4018: '<': signed/unsigned mismatch
-  Source.cpp
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(67,25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(67,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(145,25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(145,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(467,24): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(499,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(516,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(533,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(550,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Editor.h(567,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Source.cpp(15,21): warning C4129: '.': unrecognized character escape sequence
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Source.cpp(117,86): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
+C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Game.cpp(138,98): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Source.cpp(119,81): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
+C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Game.cpp(138,54): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Source.cpp(119,57): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-  Generating Code...
+C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Platformer\Game.cpp(147,20): warning C4018: '<': signed/unsigned mismatch
   Platformer.vcxproj -> C:\Users\Luke\Documents\UNI\GAD173 20T2\Platformer\GAD173 20T2\Debug\Platformer.exe

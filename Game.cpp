@@ -133,8 +133,10 @@ void GameClass::LoadLevel(std::string levelName, Tile** incTile)
 						std::cout << "Loaded Player at: " << posString << "\n"; //we now have something like "5,15"
 						std::string xStr = posString.substr(0, posString.find(','));
 						std::string yStr = posString.substr(posString.find(',') + 1, posString.length());
-
-						incTile[std::stoi(xStr)][std::stoi(yStr)].ChangeActor(Actor::Type::Player);
+						player.type = Actor::Type::Player;
+						player.Init(stoi(xStr) * 32 + ((1025 / 2) - ((32 * x) / 2)), stoi(yStr) * 32);
+						player.startPos = sf::Vector2f(stoi(xStr) * 32 + ((1025 / 2) - ((32 * x) / 2)), stoi(yStr) * 32);
+						player.Respawn();
 						lineHold[curStart] = '<';
 						lineHold[curEnd] = '>';
 					}
@@ -179,7 +181,7 @@ Collision Player::CollisionCheck(sf::FloatRect other)
 {
 	Collision col;
 	float deltaX = (nextPos.x - (nextRect.width / 2)) - (other.left - other.width / 2);
-	float deltaY = (nextPos.y = (nextRect.height / 2)) - (other.top - other.height / 2);
+	float deltaY = (nextPos.y - (nextRect.height / 2)) - (other.top - other.height / 2);
 
 	float intersectX = abs(deltaX) - ((other.width / 2) + (nextRect.width / 2));
 	float intersectY = abs(deltaY) - ((other.height / 2) + (nextRect.height / 2));
