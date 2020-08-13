@@ -226,8 +226,8 @@ Player::Player()
 	coins = 0;
 	isDead = false;
 	isGrounded = true;
-	speed = 2.5f;
-	jumpSpeed = 0.75f;
+	speed = 1.5f;
+	jumpSpeed = 0.5f;
 	velocity = sf::Vector2f(0.0f, 0.0f);
 }
 

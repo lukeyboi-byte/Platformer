@@ -317,9 +317,9 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 	}
 
 	//maximum abs velocity
-	if (abs(player.velocity.x) > 0.06f)
+	if (abs(player.velocity.x) > 0.6f)
 	{
-		player.velocity.x = 0.06f * sign(player.velocity.x);
+		player.velocity.x = 0.6f * sign(player.velocity.x);
 	}
 
 	//max vertical velocity
@@ -410,8 +410,7 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 				{
 					std::cout << "Player Grabbed Coin!" << std::endl;
 					player.coins++;
-					tile[i][j].actor.type = Actor::Type::None;
-					tile[i][j].RefreshTile();
+					tile[i][j].ChangeActor(Actor::Type::None);
 				}
 			}
 			else if (tile[i][j].actor.type == Actor::Type::Spike)
@@ -443,9 +442,8 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 						if (pcol.dir.y >= 0.0f)
 						{
 							//we're on top of the enemy
-							//kill enemy (this is tempiorary code until we give a proper death state)
-							tile[i][j].actor.type = Actor::Type::None;
-							tile[i][j].RefreshTile();
+							//kill enemy (this is temporary code until we give a proper death state)
+							tile[i][j].ChangeActor(Actor::Type::None);
 						}
 						else
 						{
