@@ -69,12 +69,19 @@ int main()
 		case Mode::Game:
 			if (!myGame.gameActive)
 			{
-				if (!myGame.Start(mainWindow))
+				if (!myGame.Start(mainWindow, myMainMenu))
 				{
 					return EXIT_FAILURE;
 				}
 			}
 			myGame.Update(mainWindow);
+			break;
+			//added in the game win and game over states
+		case Mode::GameWin:	
+			myMainMenu.Update(mainWindow);
+			break;
+		case Mode::GameOver:
+			myMainMenu.Update(mainWindow);
 			break;
 		default:
 			break;
@@ -94,13 +101,43 @@ void MainMenu::Update(MainRenderWindow& mainWindow)
 {
 	while (menuActive)
 	{
-		mainWindow.worldPos = mainWindow.window.mapPixelToCoords(sf::Mouse::getPosition(mainWindow.window));
-		levelEditorButton.checkClick(std::bind(&MainMenu::ChangeMode, this, Mode::Editor), mainWindow.worldPos);
-		gameButton.checkClick(std::bind(&MainMenu::ChangeMode, this, Mode::Game), mainWindow.worldPos);
-		mainWindow.clear();
-		mainWindow.window.draw(levelEditorButton);
-		mainWindow.window.draw(gameButton);
-		mainWindow.window.display();
+		UpdateButtons();
+		switch (MainMenu::myMode.currentMode)
+		{
+		case::Mode::MainMenu:
+			mainWindow.worldPos = mainWindow.window.mapPixelToCoords(sf::Mouse::getPosition(mainWindow.window));
+			levelEditorButton.checkClick(std::bind(&MainMenu::ChangeMode, this, Mode::Editor), mainWindow.worldPos);
+			gameButton.checkClick(std::bind(&MainMenu::ChangeMode, this, Mode::Game), mainWindow.worldPos);
+			mainWindow.clear();
+			mainWindow.window.draw(levelEditorButton);
+			mainWindow.window.draw(gameButton);
+			mainWindow.window.display();
+			break;
+			//added in the game over and game win states
+		case::Mode::GameOver:
+			mainWindow.worldPos = mainWindow.window.mapPixelToCoords(sf::Mouse::getPosition(mainWindow.window));
+			returnToMenuButton.checkClick(std::bind(&MainMenu::ChangeMode, this, Mode::MainMenu), mainWindow.worldPos);
+			//need to find a way to quit properly
+			quitButton.checkClick(std::bind(&MainMenu::ChangeMode, this, Mode::MainMenu), mainWindow.worldPos);
+			mainWindow.clear();
+			mainWindow.window.draw(returnToMenuButton);
+			mainWindow.window.draw(quitButton);
+			mainWindow.window.display();
+			break;
+		case::Mode::GameWin:
+			mainWindow.worldPos = mainWindow.window.mapPixelToCoords(sf::Mouse::getPosition(mainWindow.window));
+			returnToMenuButton.checkClick(std::bind(&MainMenu::ChangeMode, this, Mode::MainMenu), mainWindow.worldPos);
+			//need to find a way to quit properly
+			quitButton.checkClick(std::bind(&MainMenu::ChangeMode, this, Mode::MainMenu), mainWindow.worldPos);
+			mainWindow.clear();
+			mainWindow.window.draw(returnToMenuButton);
+			mainWindow.window.draw(quitButton);
+			mainWindow.window.display();
+			break;
+		default:
+			break;
+		}
+		
 	}
 	return;
 }
@@ -120,6 +157,7 @@ bool EditorClass::Start(MainRenderWindow &mainWindow)
 	toolsView.setViewport(sf::FloatRect(0, 0, 0.045f, 1));
 	levelEditView = sf::View(sf::FloatRect(0, 0, mainWindow.windowWidth, mainWindow.windowHeight));
 	levelEditView.setViewport(sf::FloatRect(0.03f, 0, 1, 1));
+	inputField.UpdatePos(sf::Vector2f(0, 52));
 
 	//setup variables to apoint with
 	curTileType = Tile::Type::Platform;
@@ -240,8 +278,25 @@ void EditorClass::Update(MainRenderWindow &mainWindow)
 	mainWindow.window.display();
 }
 
-bool GameClass::Start(MainRenderWindow& mainWindow)
+bool GameClass::Start(MainRenderWindow& mainWindow, MainMenu& incMainMenu)
 {
+	mainMenu = incMainMenu;
+	//load sound buffers
+	deathSB.loadFromFile("SFX/Death Sound 1.wav");
+	coinSB.loadFromFile("SFX/Jump spring.wav");
+	jumpSB.loadFromFile("SFX/Reward.wav");
+
+	//Text for lives and score
+	font.loadFromFile("arial.ttf");
+	coinsText.setFont(font);
+	livesText.setFont(font);
+	coinsText.setPosition(0, mainWindow.windowHeight - 50);
+	livesText.setPosition(mainWindow.windowWidth - 100, mainWindow.windowHeight - 50);
+	coinsText.setCharacterSize(24);
+	livesText.setCharacterSize(24);
+	coinsText.setFillColor(sf::Color::Black);
+	livesText.setFillColor(sf::Color::Black);
+
 	GetAllSaveFiles();
 	//setup of game, init tiles
 	for (int i = 0; i < x; i++)
@@ -268,7 +323,7 @@ bool GameClass::Start(MainRenderWindow& mainWindow)
 }
 
 void GameClass::Update(MainRenderWindow& mainWindow)
-{
+{	
 	mainWindow.window.clear(sf::Color::White);
 	deltaTime = clock.restart().asSeconds();
 	//Controls!
@@ -304,6 +359,9 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 		{
 			player.isGrounded = false;
 			player.velocity.y += -player.jumpSpeed + deltaTime;
+			//SFX
+			sound.setBuffer(jumpSB);
+			sound.play();
 		}
 	}
 
@@ -396,9 +454,11 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 					player.Respawn();
 					std::cout << "player hit lava" << std::endl;
 					if (player.lives == 0)
-					{
+					{						
 						//gamer over (todo - add gameover state/screen)
-						mainWindow.close();
+						mainMenu.ChangeMode(Mode::GameOver);
+						gameActive = false;
+						return;
 					}
 				}
 			}
@@ -411,6 +471,9 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 					std::cout << "Player Grabbed Coin!" << std::endl;
 					player.coins++;
 					tile[i][j].ChangeActor(Actor::Type::None);
+					//SFX
+					sound.setBuffer(coinSB);
+					sound.play();
 				}
 			}
 			else if (tile[i][j].actor.type == Actor::Type::Spike)
@@ -426,7 +489,9 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 					if (player.lives == 0)
 					{
 						//transition to our game over screen
-						mainWindow.close();
+						mainMenu.ChangeMode(Mode::GameOver);
+						gameActive = false;
+						return;
 					}
 				}
 			}
@@ -444,6 +509,9 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 							//we're on top of the enemy
 							//kill enemy (this is temporary code until we give a proper death state)
 							tile[i][j].ChangeActor(Actor::Type::None);
+							//SFX
+							sound.setBuffer(deathSB);
+							sound.play();
 						}
 						else
 						{
@@ -453,7 +521,9 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 							if (player.lives == 0)
 							{
 								//insert game over trasition
-								mainWindow.close();
+								mainMenu.ChangeMode(Mode::GameOver);
+								gameActive = false;
+								return;
 							}
 						}
 					}
@@ -465,7 +535,9 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 						if (player.lives == 0)
 						{
 							//insert game over trasition
-							mainWindow.close();
+							mainMenu.ChangeMode(Mode::GameOver);
+							gameActive = false;
+							return;
 						}
 					}
 				}
@@ -484,16 +556,23 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 					else
 					{
 						//Victory Screen! todo make a "You Win!" screen
-						mainWindow.close();
+						mainMenu.ChangeMode(Mode::GameWin);
+						gameActive = false;
+						return;
 					}
 				}
             }
 		}
 	}
+	//text what does it say?
+	coinsText.setString("Coins: " + std::to_string(player.coins));
+	livesText.setString("Lives: " + std::to_string(player.lives));
 
 	//set player position
 	player.setPosition(player.nextPos);
 	//draw
+	mainWindow.window.draw(coinsText);
+	mainWindow.window.draw(livesText);
 	mainWindow.window.draw(player);
 	mainWindow.window.display();
 }

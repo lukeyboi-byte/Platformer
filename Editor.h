@@ -590,7 +590,5 @@ public:
 			std::cout << "Cannot open save file to load! \n";
 		}
 	}
-
-	//printing out tiles (debug)
 	
 };

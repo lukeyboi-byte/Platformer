@@ -1,5 +1,7 @@
 #pragma once
 #include "Editor.h"
+#include <SFML/Audio.hpp>
+#include "MenuHeader.h" 
 
 struct Collision
 {
@@ -51,13 +53,14 @@ class GameClass
 {
 public:
 	GameClass();
-	bool Start(MainRenderWindow& mainWindow);
+	bool Start(MainRenderWindow& mainWindow, MainMenu& incMainMenu);
 	void Update(MainRenderWindow& mainWindow);
 	bool gameActive = false;
 	static const int x = 30;
 	static const int y = 20;
 
 	Player player;
+	MainMenu mainMenu;
 	//std::vector<Enemy> enemies;
 
 	void SaveScore();
@@ -73,6 +76,15 @@ public:
 	float gravity;
 	float friction;
 	int coins;
+	//Text shown for lives and coins
+	sf::Text livesText;
+	sf::Text coinsText;
+	sf::Font font;
+	//SFX
+	sf::SoundBuffer deathSB;
+	sf::SoundBuffer coinSB;
+	sf::SoundBuffer jumpSB;
+	sf::Sound sound;	
 };
 
 int sign(int x);
